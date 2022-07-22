@@ -1,16 +1,13 @@
 import connection from '../databases/postgres.js';
 
 export default async function registerCategory(request, response) {
+  console.log('problema aqui');
   const newCategory = request.body.name;
-
-  const categories = response.locals.categories;
-
-  const isRegistered = categories.some(category => category === newCategory);
-  if (isRegistered) response.sendStatus(409);
-
   try {
-    //adicionar categoria na tabela
+    await connection.query(`INSERT INTO categories (name) VALUES ($1)`, [newCategory]);
+
+    return response.sendStatus(201);
   } catch {
-    console.log('deu erro');
+    return response.sendStatus(500);
   }
 }
