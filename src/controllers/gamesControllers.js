@@ -18,3 +18,21 @@ export async function registerGame(request, response) {
     return response.status(500).send('erro ao adicionar game');
   }
 }
+
+export async function getGames(request, response) {
+  const { name } = request.query;
+
+  const queryBasic = `SELECT games.*, categories.name AS categoryName FROM games JOIN categories ON categories.id = games."categoryId"`;
+
+  try {
+    const query = !!name
+      ? queryBasic + ` WHERE games.name ILIKE '${name}%';`
+      : queryBasic;
+
+    const { rows: games } = await connection.query(query);
+
+    return response.status(200).send(games);
+  } catch {
+    return response.sendStatus(500);
+  }
+}
