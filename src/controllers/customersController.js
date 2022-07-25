@@ -31,9 +31,23 @@ export async function getCustomers(request, response) {
     }
     console.log(query);
     const { rows: customer } = await connection.query(query);
+    if (!customer) return response.sendStatus(404);
 
     return response.status(200).send(customer);
   } catch {
     return response.sendStatus(500);
+  }
+}
+
+export async function putCustomers(request, response) {
+  const newCustomer = request.body;
+  const { id } = request.params;
+  try {
+    await connection.query(
+      `UPDATE customers SET (name = '${newCustomer.name}', phone = '${newCustomer.phone}', cpf = '${newCustomer.cpf}', birthday = '${newCustomer.birthday}') WHERE customers.id = ${id};`
+    );
+    return response.sendStatus(200);
+  } catch {
+    return response.status(500).send('erro ao atualizar customers');
   }
 }
