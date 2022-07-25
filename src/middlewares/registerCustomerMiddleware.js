@@ -21,7 +21,7 @@ async function validateNewCustomer(request, response, next) {
 
     next();
   } catch {
-    response.status(500).send('erro ao pegar categorias');
+    response.status(500).send('erro ao inserir customer');
   }
 }
 

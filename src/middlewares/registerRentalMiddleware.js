@@ -17,14 +17,14 @@ async function validateNewRental(request, response, next) {
       `SELECT * FROM customers WHERE customers.id = ${newRental.customerId}`
     );
 
-    if (!isCustomerRegistered) return response.sendStatus(400);
+    if (!!isCustomerRegistered) return response.sendStatus(400);
 
     //============================================================
     const { rows: gameSelected } = await connection.query(
       `SELECT * FROM games WHERE games.id = ${newRental.gameId};`
     );
 
-    if (!gameSelected) return response.sendStatus(400);
+    if (!!gameSelected) return response.sendStatus(400);
 
     const { rows: rentals } = await connection.query(
       `SELECT * FROM rentals WHERE rentals."gameId" = $1`,

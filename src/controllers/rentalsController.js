@@ -4,12 +4,13 @@ export async function registerRental(request, response) {
   const NewRental = request.body;
   const { gameSelected } = response.locals;
   const daysRentedCount = NewRental.daysRented * gameSelected[0].pricePerDay;
+  const today = dayjs().format('YYYY-MM-DD');
   try {
     await connection.query(
       `INSERT INTO rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee") VALUES
       (${NewRental.customerId},
       ${NewRental.gameId},
-      '${dayjs().format('YYYY-MM-DD')}',
+      '${today}',
       ${daysRentedCount},
       ${null},
       ${gameSelected[0].pricePerDay},
@@ -69,5 +70,29 @@ export async function getRentals(request, response) {
     return response.status(200).send(rentalsJoin);
   } catch {
     return response.status(500).send('erro ao pegar alugueis');
+  }
+}
+
+export async function returnRental(request, response) {
+  const { id } = request.params;
+  const { rentalSelected } = response.locals;
+
+  const rentDateResume = rentalSelected[0].rentDate;
+
+  const today = dayjs().format('YYYY-MM-DD');
+  console.log(today);
+  console.log(rentDateResume);
+  const countDelayFee = dayjs(rentDateResume).diff(today, 'd');
+
+  try {
+    await connection.query(
+      `UPDATE rentals SET returnDate = '${dayjs().format(
+        'YYYY-MM-DD'
+      )}', delayFee = '${countDelayFee}' WHERE rentals.id = ${id};`
+    );
+
+    return response.sendStatus(201);
+  } catch {
+    return response.status(500).send('erro ao adicionar rental no banco');
   }
 }
