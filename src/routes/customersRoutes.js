@@ -6,5 +6,5 @@ const router = Router();
 
 router.post('/customers', validateNewCustomer, registerCustomer);
 
-router.get('/customers', getCustomers);
+router.get('/customers/:id', getCustomers);
 export default router;
