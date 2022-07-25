@@ -22,13 +22,12 @@ export async function getCustomers(request, response) {
 
   const queryBasic = `SELECT * FROM customers`;
   let query = queryBasic;
+  console.log('aaa');
   try {
     if (!!cpf) {
-      console.log('entrou e cpf é: ', cpf);
       query = queryBasic + ` WHERE customers.cpf ILIKE '${cpf}%';`;
     } else if (!!id) {
-      console.log('entrou e id é: ', id);
-      query = queryBasic + ` WHERE customers.id = '${id}';`;
+      query = queryBasic + ` WHERE customers.id = ${id};`;
     }
     console.log(query);
     const { rows: customer } = await connection.query(query);
