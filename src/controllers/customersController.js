@@ -15,6 +15,7 @@ export async function registerCustomer(request, response) {
     return response.status(500).send('erro ao inserir customers');
   }
 }
+
 export async function getCustomers(request, response) {
   const { cpf } = request.query;
   const { id } = request.params;
