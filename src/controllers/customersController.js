@@ -44,7 +44,7 @@ export async function putCustomers(request, response) {
   const { id } = request.params;
   try {
     await connection.query(
-      `UPDATE customers SET (name = '${newCustomer.name}', phone = '${newCustomer.phone}', cpf = '${newCustomer.cpf}', birthday = '${newCustomer.birthday}') WHERE customers.id = ${id};`
+      `UPDATE customers SET name = '${newCustomer.name}', phone = '${newCustomer.phone}', cpf = '${newCustomer.cpf}', birthday = '${newCustomer.birthday}' WHERE customers.id = ${id};`
     );
     return response.sendStatus(200);
   } catch {
