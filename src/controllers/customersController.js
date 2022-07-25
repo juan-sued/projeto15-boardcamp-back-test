@@ -17,17 +17,22 @@ export async function registerCustomer(request, response) {
 }
 export async function getCustomers(request, response) {
   const { cpf } = request.query;
+  const { id } = request.params;
 
   const queryBasic = `SELECT * FROM customers`;
-
+  let query = queryBasic;
   try {
-    const query = !!cpf
-      ? queryBasic + ` WHERE customers.cpf ILIKE '${cpf}%';`
-      : queryBasic;
+    if (!!cpf) {
+      console.log('entrou e cpf é: ', cpf);
+      query = queryBasic + ` WHERE customers.cpf ILIKE '${cpf}%';`;
+    } else if (!!id) {
+      console.log('entrou e id é: ', id);
+      query = queryBasic + ` WHERE customers.id = '${id}';`;
+    }
+    console.log(query);
+    const { rows: customer } = await connection.query(query);
 
-    const { rows: cpfs } = await connection.query(query);
-
-    return response.status(200).send(cpfs);
+    return response.status(200).send(customer);
   } catch {
     return response.sendStatus(500);
   }
